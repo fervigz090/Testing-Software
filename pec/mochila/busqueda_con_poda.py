@@ -25,15 +25,12 @@ def haz_busqueda_con_poda(mochila, indice_articulo,
         return (deepcopy(mochila), mochila.valor())
 
     else:
-        # No seleccionar el artículo actual
-        solucion_no_sel_art, valor_no_sel_art \
-            = haz_busqueda_con_poda(mochila, indice_articulo + 1,
-                                    valor_actual,
-                                    peso_actual,
-                                    valor_restante,
-                                    mejor_valor_hasta_ahora)
 
-        # Seleccionar el artículo actual si es posible
+        if valor_actual + valor_restante <= mejor_valor_hasta_ahora[0]:
+            return (None, 0)
+
+        solucion_sel_art = None
+        valor_sel_art = 0
         if peso_actual + mochila.articulos[indice_articulo].peso \
                 <= mochila.capacidad:
             mochila.articulos[indice_articulo].seleccionado = True
@@ -43,12 +40,16 @@ def haz_busqueda_con_poda(mochila, indice_articulo,
                                         peso_actual + mochila.articulos[indice_articulo].peso,
                                         valor_restante - mochila.articulos[indice_articulo].valor,
                                         mejor_valor_hasta_ahora)
-            mochila.articulos[indice_articulo].seleccionado = False
 
-            # Comprobar si la selección actual es mejor que la no selección
-            if valor_sel_art > valor_no_sel_art:
-                return (solucion_sel_art, valor_sel_art)
+        mochila.articulos[indice_articulo].seleccionado = False
+        solucion_no_sel_art, valor_no_sel_art \
+            = haz_busqueda_con_poda(mochila, indice_articulo + 1,
+                                    valor_actual,
+                                    peso_actual,
+                                    valor_restante - mochila.articulos[indice_articulo].valor,
+                                    mejor_valor_hasta_ahora)
 
-        # Si no se selecciona el artículo actual o su selección no es mejor,
-        # simplemente retornamos la solución y valor de no selección
-        return (solucion_no_sel_art, valor_no_sel_art)
+        if valor_sel_art > valor_no_sel_art:
+            return (solucion_sel_art, valor_sel_art)
+        else:
+            return (solucion_no_sel_art, valor_no_sel_art)

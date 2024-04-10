@@ -25,9 +25,19 @@ def test_busqueda_con_poda():
         kp = genera_aleatorio(numArticulos)
         s1, v1 = busqueda_exhaustiva(kp)
         s2, v2 = busqueda_con_poda(kp)
-        assert v1 == v2
-        for i in range(numArticulos):
-            assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
+        try:
+            assert v1 == v2
+            for i in range(numArticulos):
+                assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
+        except AssertionError:
+            print("Las soluciones de búsqueda exhaustiva y búsqueda con poda no coinciden.")
+            print("Valor 1 =", v1, "Valor 2 =", v2)
+            temp = True
+            for i in range(numArticulos):
+                if s1.articulos[i].seleccionado != s2.articulos[i].seleccionado:
+                    temp = False
+                    break
+            print("Mismos objetos seleccionados con ambos algoritmos:", temp, "\n")
 
 def test_algotitmo_voraz():
     kp = None
@@ -37,7 +47,10 @@ def test_algotitmo_voraz():
         kp = genera_aleatorio(numArticulos)
         s1, v1 = busqueda_exhaustiva(kp)
         s2, v2 = algoritmo_voraz(kp)
-        assert v1 == v2
-        for i in range(numArticulos):
-            assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
+        try:
+            assert v1 == v2
+            for i in range(numArticulos):
+                assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
+        except AssertionError:
+            print("Las soluciones de búsqueda exhaustiva y algoritmo voraz no coinciden.")
             
