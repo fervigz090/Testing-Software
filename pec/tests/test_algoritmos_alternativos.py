@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 from mochila.busqueda_exhaustiva import busqueda_exhaustiva
 from mochila.busqueda_con_poda import busqueda_con_poda
 from mochila.algoritmo_voraz import algoritmo_voraz
@@ -30,14 +31,9 @@ def test_busqueda_con_poda():
             for i in range(numArticulos):
                 assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
         except AssertionError:
-            print("Las soluciones de búsqueda exhaustiva y búsqueda con poda no coinciden.")
-            print("Valor 1 =", v1, "Valor 2 =", v2)
-            temp = True
-            for i in range(numArticulos):
-                if s1.articulos[i].seleccionado != s2.articulos[i].seleccionado:
-                    temp = False
-                    break
-            print("Mismos objetos seleccionados con ambos algoritmos:", temp, "\n")
+            imprimir_resultados(s1, s2, numArticulos, "busqueda_con_poda")
+            print("Valor 1:", v1, "\nValor 2:", v2)
+            print("\nCapacidad:", kp.capacidad)
 
 def test_algotitmo_voraz():
     kp = None
@@ -52,5 +48,15 @@ def test_algotitmo_voraz():
             for i in range(numArticulos):
                 assert s1.articulos[i].seleccionado == s2.articulos[i].seleccionado
         except AssertionError:
-            print("Las soluciones de búsqueda exhaustiva y algoritmo voraz no coinciden.")
+            imprimir_resultados(s1, s2, numArticulos, "algoritmo_voraz")
+            print("Valor 1:", v1, "Valor 2:", v2)
+            print("Capacidad:", kp.capacidad)
             
+def imprimir_resultados(s1, s2, numArticulos, algoritmo):
+    print("\nSolución diferente entre busqueda_exhaustiva y", algoritmo)
+    data = []
+    for i in range(numArticulos):
+        data.append([f"{s1.articulos[i].valor}, {s1.articulos[i].peso}, {s1.articulos[i].seleccionado}",
+                        f"{s2.articulos[i].valor}, {s2.articulos[i].peso}, {s2.articulos[i].seleccionado}"])
+    df = pd.DataFrame(data, columns=["busqueda_exhaustiva", algoritmo])
+    print(df)

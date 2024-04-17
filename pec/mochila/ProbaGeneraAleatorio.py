@@ -4,41 +4,23 @@ from busqueda_exhaustiva import busqueda_exhaustiva
 from busqueda_con_poda import busqueda_con_poda
 from algoritmo_voraz import algoritmo_voraz
 from mochila import Mochila
+import pandas as pd
 
-def genera_aleatorio(numArticulos):
-    capacidad = 0
-    mochila = Mochila()
-    for _ in range(numArticulos):
-        valor = random.randint(0, 10)
-        peso = random.randint(1, 10)
-        capacidad = capacidad + peso
-        mochila.insertar_articulo(valor, peso)
 
-    mochila.capacidad = capacidad//2
-    return mochila
+mochila = Mochila(16)
+mochila.insertar_articulo(8, 5)
+mochila.insertar_articulo(3, 3)
+mochila.insertar_articulo(2, 5)
+mochila.insertar_articulo(6, 7)
 
-def test_busqueda_con_poda():
-    kp = None
-    numArticulos = 0
-    for _ in range(100):
-        numArticulos = random.randint(5, 10)
-        print("numero de articulos", numArticulos)
-        kp = genera_aleatorio(numArticulos)
-        s1, v1 = busqueda_exhaustiva(kp)
-        s2, v2 = busqueda_con_poda(kp)
-        print(v1 == v2)
-        print("-------------------- Mochila KP --------------------")
-        kp.imprimir()
-        print(kp.articulos[1].valor)
-        print("-------------------- Mochila Busqueda Exhaustiva --------------------")
-        s1.imprimir()
-        print("--------------------- Mochila Busqueda con Poda ---------------------")
-        s2.imprimir()
-        for i in range(numArticulos):
-            print(s1.articulos[i].seleccionado == s2.articulos[i].seleccionado)
+solucion, valor = busqueda_exhaustiva(mochila)
 
-test_busqueda_con_poda()
-
+data = []
+numArticulos = 4
+for i in range(numArticulos):
+    data.append([f"{solucion.articulos[i].valor}, {solucion.articulos[i].peso}, {solucion.articulos[i].seleccionado}"])
+df = pd.DataFrame(data, columns=["busqueda_exhaustiva"])
+print(df)
 
 
 

@@ -1,6 +1,23 @@
+import csv
+import random
+import time
 import pytest
 from mochila.mochila import Mochila
 from mochila.busqueda_exhaustiva import busqueda_exhaustiva
+from mochila.busqueda_con_poda import busqueda_con_poda
+from mochila.algoritmo_voraz import algoritmo_voraz
+
+def genera_aleatorio(numArticulos):
+    capacidad = 0
+    mochila = Mochila()
+    for _ in range(numArticulos):
+        valor = random.randint(0, 10)
+        peso = random.randint(1, 10)
+        capacidad = capacidad + peso
+        mochila.insertar_articulo(valor, peso)
+
+    mochila.capacidad = capacidad//2
+    return mochila
 
 def test_M1():
     mochila = Mochila(8)
@@ -106,4 +123,44 @@ def test_M10():
     with pytest.raises(ValueError):
         mochila.insertar_articulo(10, 0)
     
+def test_escalabilidad_exhaustiva_vs_poda():
+    with open('escalabilidad_exhaustiva_vs_poda.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['algoritmo', 'numero_de_articulos', 'valor_optimo', 'segundos'])
+        for numArticulos in range(5, 18):
+            kp = genera_aleatorio(numArticulos)
 
+            t0_exhaustiva = time.time()
+            solucion_exhaustiva, valor_exhaustiva = busqueda_exhaustiva(kp)
+            t1_exhaustiva = time.time()
+            t_exhaustiva = t1_exhaustiva - t0_exhaustiva
+
+            writer.writerow(['busqueda_exhaustiva', numArticulos, valor_exhaustiva, t_exhaustiva])
+
+            t0_poda = time.time()
+            solucion_poda, valor_poda = busqueda_con_poda(kp)
+            t1_poda = time.time()
+            t_poda = t1_poda - t0_poda
+
+            writer.writerow(['busqueda_con_poda', numArticulos, valor_poda, t_poda])
+
+def test_escalabilidad_poda_vs_voraz():
+    with open('escalabilidad_poda_vs_voraz.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['algoritmo', 'numero_de_articulos', 'valor_optimo', 'segundos'])
+        for numArticulos in range(5, 18):
+            kp = genera_aleatorio(numArticulos)
+
+            t0_poda = time.time()
+            solucion_poda, valor_poda = busqueda_con_poda(kp)
+            t1_poda = time.time()
+            t_poda = t1_poda - t0_poda
+
+            writer.writerow(['busqueda_con_poda', numArticulos, valor_poda, t_poda])
+
+            t0_voraz = time.time()
+            solucion_voraz, valor_voraz = algoritmo_voraz(kp)
+            t1_voraz = time.time()
+            t_voraz = t1_voraz - t0_voraz
+
+            writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
