@@ -2,6 +2,7 @@ import csv
 import random
 import time
 import pytest
+import pandas as pd
 from mochila.mochila import Mochila
 from mochila.busqueda_exhaustiva import busqueda_exhaustiva
 from mochila.busqueda_con_poda import busqueda_con_poda
@@ -164,3 +165,40 @@ def test_escalabilidad_poda_vs_voraz():
             t_voraz = t1_voraz - t0_voraz
 
             writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
+
+# Tests ACTS
+def test_ACTS_JP1():
+    # Lee el fichero csv exportado con ACTS
+    df = pd.read_csv('JP1-output.csv')
+
+    fallo_valor = False
+    fallo_peso = False
+    fallo_capacidad = False
+
+    for index, row in df.iterrows():
+        capacidad = row['capacidad']
+        valor = row['valor']
+        peso = row['peso']
+        num_articulos = row['articulos']
+
+        try:
+            mochila = Mochila(capacidad)
+            for i in range(num_articulos):
+                mochila.insertar_articulo(valor, peso)
+
+            solucion, valor = busqueda_exhaustiva(mochila)
+        except ValueError:
+            if valor < 0:
+                fallo_valor = True
+            if capacidad < 0:
+                fallo_capacidad = True
+            if peso <= 0:
+                fallo_peso = True
+            continue  # Continua con la siguiente iteración del bucle
+                
+    # Debe detectar los fallos en todas las variables
+    assert fallo_valor == True
+    assert fallo_peso == True
+    assert fallo_capacidad == True
+
+
