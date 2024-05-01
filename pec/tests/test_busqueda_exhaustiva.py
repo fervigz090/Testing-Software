@@ -202,3 +202,25 @@ def test_ACTS_JP1():
     assert fallo_capacidad == True
 
 
+def test_ACTS_JP2():
+    # Lee el fichero csv exportado con ACTS
+    df = pd.read_csv('JP2-output.csv')
+
+    for index, row in df.iterrows():
+        capacidad = row['capacidad']
+        valor = row['valor']
+        peso = row['peso']
+        num_articulos = row['articulos']
+    
+        try:
+            mochila = Mochila(capacidad)
+            for i in range(num_articulos):
+                mochila.insertar_articulo(valor, peso)
+
+            solucion, valor = busqueda_exhaustiva(mochila)
+        except ValueError:
+            # Si detecta un error, la prueba falla
+            assert False
+        assert True
+            
+

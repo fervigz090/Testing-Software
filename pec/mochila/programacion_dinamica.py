@@ -19,7 +19,7 @@ def programacion_dinamica(mochila):
             else:
                 tabla[i][j] = tabla[i - 1][j]
     
-    # Reconstruir la selección de artículos
+    # Reconstruir la seleccion de artículos
     seleccionados = [False] * n
     i, j = n, capacidad
     while i > 0 and j > 0:
