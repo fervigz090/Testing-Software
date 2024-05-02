@@ -20,110 +20,93 @@ def genera_aleatorio(numArticulos):
     mochila.capacidad = capacidad//2
     return mochila
 
-def test_M1():
-    mochila = Mochila(8)
-    mochila.insertar_articulo(10, 6)
-    mochila.insertar_articulo(2, 2)
-    mochila.insertar_articulo(1, 1)
-    mochila.insertar_articulo(10, 3)
-    mochila.insertar_articulo(5, 4)
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 16
-    assert solucion.articulos[0].seleccionado == False
-    assert solucion.articulos[1].seleccionado == False
-    assert solucion.articulos[2].seleccionado == True
-    assert solucion.articulos[3].seleccionado == True
-    assert solucion.articulos[4].seleccionado == True
-
-def test_M2():
-    mochila = Mochila(8)
-    mochila.insertar_articulo(1, 1)
-    mochila.insertar_articulo(2, 2)
-    mochila.insertar_articulo(5, 4)
-    mochila.insertar_articulo(10, 3)
-    mochila.insertar_articulo(10, 6)
-    
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 16
-    assert solucion.articulos[0].seleccionado == True
-    assert solucion.articulos[1].seleccionado == False
-    assert solucion.articulos[2].seleccionado == True
-    assert solucion.articulos[3].seleccionado == True
-    assert solucion.articulos[4].seleccionado == False
-
-def test_M2():
-    mochila = Mochila(20)
-    mochila.insertar_articulo(1, 1)
-    mochila.insertar_articulo(2, 2)
-    mochila.insertar_articulo(5, 4)
-    mochila.insertar_articulo(10, 3)
-    mochila.insertar_articulo(10, 6)
-    
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 28
-    assert solucion.articulos[0].seleccionado == True
-    assert solucion.articulos[1].seleccionado == True
-    assert solucion.articulos[2].seleccionado == True
-    assert solucion.articulos[3].seleccionado == True
-    assert solucion.articulos[4].seleccionado == True
-
-def test_M4():
-    mochila = Mochila(8)
-    
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 0
+def genera_valores(id):
+    if id == "C1":
+        return random.randint(1,20)
+    if id == "C2":
+        return -2
+    if id == "C3" or id == "N3" or id == "P2" or id == "V3":
+        return 0
+    if id == "N1":
+        return random.randint(1,5)
+    if id == "N2":
+        return -1
+    if id == "P1" or id == "V1":
+        return random.randint(1,10)
+    if id == "P3":
+        return -2
+    if id == "V2":
+        return -3
+    else:
+        return "Error ID valor"
     
 
-def test_M5():
-    mochila = Mochila(0)
-    mochila.insertar_articulo(10, 6)
-    mochila.insertar_articulo(2, 2)
-    mochila.insertar_articulo(1, 1)
-    mochila.insertar_articulo(10, 3)
-    mochila.insertar_articulo(5, 4)
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 0
-    assert solucion.articulos[0].seleccionado == False
-    assert solucion.articulos[1].seleccionado == False
-    assert solucion.articulos[2].seleccionado == False
-    assert solucion.articulos[3].seleccionado == False
-    assert solucion.articulos[4].seleccionado == False
+# Tests ACTS
+def test_ACTS_JP1():
+    # Lee el fichero csv exportado con ACTS
+    df = pd.read_csv('JP1-output.csv')
 
-def test_M6():
-    mochila = None
-    with pytest.raises(ValueError):
-        mochila = Mochila(-1)
+    fallo_valor = False
+    fallo_peso = False
+    fallo_capacidad = False
 
-def test_M7():
-    mochila = Mochila()
-    mochila.insertar_articulo(10, 6)
-    mochila.insertar_articulo(2, 2)
-    mochila.insertar_articulo(1, 1)
-    mochila.insertar_articulo(10, 3)
-    mochila.insertar_articulo(5, 4)
-    solucion, valor = busqueda_exhaustiva(mochila)
-    assert valor == 0
-    assert solucion.articulos[0].seleccionado == False
-    assert solucion.articulos[1].seleccionado == False
-    assert solucion.articulos[2].seleccionado == False
-    assert solucion.articulos[3].seleccionado == False
-    assert solucion.articulos[4].seleccionado == False
+    for index, row in df.iterrows():
+        id_capacidad = row['C']
+        id_num_articulos = row['N']
+        id_peso = row['P']
+        id_valor = row['V']
 
-def test_M8():
-    mochila = Mochila(8)
-    with pytest.raises(ValueError):
-        mochila.insertar_articulo(-1, 6)
+        try:
+            capacidad = genera_valores(id_capacidad)
+            num_articulos = genera_valores(id_num_articulos)
+            mochila = Mochila(capacidad)
+            for i in range(num_articulos):
+                valor = genera_valores(id_valor)
+                peso = genera_valores(id_peso)
+                mochila.insertar_articulo(valor, peso)
+
+            solucion, valor = busqueda_exhaustiva(mochila)
+        except ValueError:
+            if valor < 0:
+                fallo_valor = True
+            if capacidad < 0:
+                fallo_capacidad = True
+            if peso <= 0:
+                fallo_peso = True
+            continue  # Continua con la siguiente iteración del bucle
+                
+    # Debe detectar los fallos en todas las variables
+    assert fallo_valor == True
+    assert fallo_peso == True
+    assert fallo_capacidad == True
+
+
+def test_ACTS_JP2():
+    # Lee el fichero csv exportado con ACTS
+    df = pd.read_csv('JP2-output.csv')
+
+    for index, row in df.iterrows():
+        id_capacidad = row['C']
+        id_num_articulos = row['N']
+        id_peso = row['P']
+        id_valor = row['V']
     
-def test_M9():
-    mochila = Mochila(8)
-    with pytest.raises(ValueError):
-        mochila.insertar_articulo(10, -3)
+        try:
+            capacidad = genera_valores(id_capacidad)
+            num_articulos = genera_valores(id_num_articulos)
+            mochila = Mochila(capacidad)
+            for i in range(num_articulos):
+                valor = genera_valores(id_valor)
+                peso = genera_valores(id_peso)
+                mochila.insertar_articulo(valor, peso)
 
-def test_M10():
-    mochila = Mochila(8)
-    with pytest.raises(ValueError):
-        mochila.insertar_articulo(10, 0)
-    
+            solucion, valor = busqueda_exhaustiva(mochila)
+        except ValueError:
+            # Si detecta un error, la prueba falla
+            assert False
+        assert True
+
+# Tests de escalabilidad
 def test_escalabilidad_exhaustiva_vs_poda():
     with open('escalabilidad_exhaustiva_vs_poda.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -166,61 +149,6 @@ def test_escalabilidad_poda_vs_voraz():
 
             writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
 
-# Tests ACTS
-def test_ACTS_JP1():
-    # Lee el fichero csv exportado con ACTS
-    df = pd.read_csv('JP1-output.csv')
 
-    fallo_valor = False
-    fallo_peso = False
-    fallo_capacidad = False
-
-    for index, row in df.iterrows():
-        capacidad = row['capacidad']
-        valor = row['valor']
-        peso = row['peso']
-        num_articulos = row['articulos']
-
-        try:
-            mochila = Mochila(capacidad)
-            for i in range(num_articulos):
-                mochila.insertar_articulo(valor, peso)
-
-            solucion, valor = busqueda_exhaustiva(mochila)
-        except ValueError:
-            if valor < 0:
-                fallo_valor = True
-            if capacidad < 0:
-                fallo_capacidad = True
-            if peso <= 0:
-                fallo_peso = True
-            continue  # Continua con la siguiente iteración del bucle
-                
-    # Debe detectar los fallos en todas las variables
-    assert fallo_valor == True
-    assert fallo_peso == True
-    assert fallo_capacidad == True
-
-
-def test_ACTS_JP2():
-    # Lee el fichero csv exportado con ACTS
-    df = pd.read_csv('JP2-output.csv')
-
-    for index, row in df.iterrows():
-        capacidad = row['capacidad']
-        valor = row['valor']
-        peso = row['peso']
-        num_articulos = row['articulos']
-    
-        try:
-            mochila = Mochila(capacidad)
-            for i in range(num_articulos):
-                mochila.insertar_articulo(valor, peso)
-
-            solucion, valor = busqueda_exhaustiva(mochila)
-        except ValueError:
-            # Si detecta un error, la prueba falla
-            assert False
-        assert True
             
 

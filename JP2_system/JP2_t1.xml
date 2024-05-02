@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System name="JP2">
+  <Parameters>
+    <Parameter id="0" name="C" type="1">
+      <values>
+        <value>C1</value>
+        <value>C3</value>
+      </values>
+      <basechoices />
+    </Parameter>
+    <Parameter id="1" name="N" type="1">
+      <values>
+        <value>N1</value>
+        <value>N3</value>
+      </values>
+      <basechoices />
+    </Parameter>
+    <Parameter id="2" name="P" type="1">
+      <values>
+        <value>P1</value>
+      </values>
+      <basechoices />
+    </Parameter>
+    <Parameter id="3" name="V" type="1">
+      <values>
+        <value>V1</value>
+        <value>V2</value>
+      </values>
+      <basechoices />
+    </Parameter>
+  </Parameters>
+  <OutputParameters />
+  <Relations />
+  <Constraints />
+  <Testset doi="1">
+    <Testcase TCNo="0">
+      <Value>1</Value>
+      <Value>C1</Value>
+      <Value>N3</Value>
+      <Value>P1</Value>
+      <Value>V2</Value>
+    </Testcase>
+    <Testcase TCNo="1">
+      <Value>2</Value>
+      <Value>C3</Value>
+      <Value>N1</Value>
+      <Value>P1</Value>
+      <Value>V1</Value>
+    </Testcase>
+  </Testset>
+  <Header>
+    <Value />
+    <Value>C</Value>
+    <Value>N</Value>
+    <Value>P</Value>
+    <Value>V</Value>
+  </Header>
+  <Stat-Data>
+    <ExecutionTime>0.0</ExecutionTime>
+    <MaxDomainSize>2</MaxDomainSize>
+    <MinDomainSize>1</MinDomainSize>
+    <TotalNoOfCombination>7</TotalNoOfCombination>
+    <TotalNoOfTests>2</TotalNoOfTests>
+    <Algorithm>IPOF</Algorithm>
+  </Stat-Data>
+</System>
+

@@ -1,3 +1,8 @@
+import csv
+import time
+from pec.mochila.algoritmo_voraz import algoritmo_voraz
+from pec.mochila.busqueda_con_poda import busqueda_con_poda
+from pec.tests.test_algoritmos_alternativos import genera_aleatorio
 import pytest
 from mochila.mochila import Articulo, Mochila
 from mochila.programacion_dinamica import programacion_dinamica
@@ -25,5 +30,45 @@ def test_programacion_dinamica():
     valor_esperado = 90  # El valor óptimo esperado para esta instancia particular
     assert valor_optimo == valor_esperado
 
-# Ejecutar el test
-test_programacion_dinamica()
+# Test de escalabilidad
+def test_escalabilidad_dinamica_vs_voraz():
+    with open('escalabilidad_dinamica_vs_voraz.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['algoritmo', 'numero_de_articulos', 'valor_optimo', 'segundos'])
+        for numArticulos in range(5, 18):
+            kp = genera_aleatorio(numArticulos)
+
+            t0_dinamica = time.time()
+            solucion_dinamica, valor_dinamica = programacion_dinamica(kp)
+            t1_dinamica = time.time()
+            t_poda = t1_dinamica - t0_dinamica
+
+            writer.writerow(['busqueda_con_poda', numArticulos, valor_dinamica, t_poda])
+
+            t0_voraz = time.time()
+            solucion_voraz, valor_voraz = algoritmo_voraz(kp)
+            t1_voraz = time.time()
+            t_voraz = t1_voraz - t0_voraz
+
+            writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
+
+def test_escalabilidad_dinamica_vs_poda():
+    with open('escalabilidad_dinamica_vs_poda.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['algoritmo', 'numero_de_articulos', 'valor_optimo', 'segundos'])
+        for numArticulos in range(5, 18):
+            kp = genera_aleatorio(numArticulos)
+
+            t0_dinamica = time.time()
+            solucion_dinamica, valor_dinamica = programacion_dinamica(kp)
+            t1_dinamica = time.time()
+            t_dinamica = t1_dinamica - t0_dinamica
+
+            writer.writerow(['busqueda_dinamica', numArticulos, valor_dinamica, t_dinamica])
+
+            t0_poda = time.time()
+            solucion_poda, valor_poda = busqueda_con_poda(kp)
+            t1_poda = time.time()
+            t_poda = t1_poda - t0_poda
+
+            writer.writerow(['busqueda_con_poda', numArticulos, valor_poda, t_poda])
