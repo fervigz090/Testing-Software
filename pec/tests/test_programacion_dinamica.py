@@ -1,8 +1,8 @@
 import csv
 import time
-from pec.mochila.algoritmo_voraz import algoritmo_voraz
-from pec.mochila.busqueda_con_poda import busqueda_con_poda
-from pec.tests.test_algoritmos_alternativos import genera_aleatorio
+from mochila.algoritmo_voraz import algoritmo_voraz
+from mochila.busqueda_con_poda import busqueda_con_poda
+from tests.test_algoritmos_alternativos import genera_aleatorio
 import pytest
 from mochila.mochila import Articulo, Mochila
 from mochila.programacion_dinamica import programacion_dinamica
