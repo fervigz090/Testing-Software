@@ -23,7 +23,7 @@ def genera_aleatorio(numArticulos):
 def genera_valores(id):
     if id == "C1":
         return random.randint(1,20)
-    if id == "C2":
+    if id == "C2" or id == "P3":
         return -2
     if id == "C3" or id == "N3" or id == "P2" or id == "V3":
         return 0
@@ -33,8 +33,6 @@ def genera_valores(id):
         return -1
     if id == "P1" or id == "V1":
         return random.randint(1,10)
-    if id == "P3":
-        return -2
     if id == "V2":
         return -3
     else:
@@ -148,7 +146,3 @@ def test_escalabilidad_poda_vs_voraz():
             t_voraz = t1_voraz - t0_voraz
 
             writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
-
-
-            
-

@@ -43,7 +43,7 @@ def test_escalabilidad_dinamica_vs_voraz():
             t1_dinamica = time.time()
             t_poda = t1_dinamica - t0_dinamica
 
-            writer.writerow(['busqueda_con_poda', numArticulos, valor_dinamica, t_poda])
+            writer.writerow(['programacion_dinamica', numArticulos, valor_dinamica, t_poda])
 
             t0_voraz = time.time()
             solucion_voraz, valor_voraz = algoritmo_voraz(kp)
@@ -52,23 +52,3 @@ def test_escalabilidad_dinamica_vs_voraz():
 
             writer.writerow(['algoritmo_voraz', numArticulos, valor_voraz, t_voraz])
 
-def test_escalabilidad_dinamica_vs_poda():
-    with open('escalabilidad_dinamica_vs_poda.csv', 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['algoritmo', 'numero_de_articulos', 'valor_optimo', 'segundos'])
-        for numArticulos in range(5, 18):
-            kp = genera_aleatorio(numArticulos)
-
-            t0_dinamica = time.time()
-            solucion_dinamica, valor_dinamica = programacion_dinamica(kp)
-            t1_dinamica = time.time()
-            t_dinamica = t1_dinamica - t0_dinamica
-
-            writer.writerow(['busqueda_dinamica', numArticulos, valor_dinamica, t_dinamica])
-
-            t0_poda = time.time()
-            solucion_poda, valor_poda = busqueda_con_poda(kp)
-            t1_poda = time.time()
-            t_poda = t1_poda - t0_poda
-
-            writer.writerow(['busqueda_con_poda', numArticulos, valor_poda, t_poda])
